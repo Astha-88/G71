@@ -1,0 +1,249 @@
+/* Hospital admin dashboard -- deliberately minimal: light neutral background,
+   dark text everywhere (no white text), subtle borders, generous padding.
+   Every class is prefixed `hd-` / scoped under `.hospital-page` because Vite
+   bundles all CSS into one global stylesheet -- generic names like `.muted` or
+   `.primary-btn` from the researcher page's dark theme would otherwise bleed
+   light-colored text into this page. */
+
+.hospital-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24px;
+  background: #f4f5f7;
+  color: #1a1a1a;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.hospital-page *,
+.hospital-page *::before,
+.hospital-page *::after {
+  box-sizing: border-box;
+}
+
+.hd-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-width: 960px;
+  margin: 0 auto 20px;
+}
+
+.hd-title {
+  margin: 0 0 4px;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.hd-muted {
+  margin: 0;
+  color: #4a4f57;
+  font-size: 0.9rem;
+}
+
+.hd-panel {
+  max-width: 960px;
+  margin: 0 auto 20px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border: 1px solid #d9dce1;
+  border-radius: 8px;
+}
+
+.hd-notice {
+  background: #fff8e6;
+  border-color: #e3c97a;
+  color: #1a1a1a;
+}
+
+.hd-notice-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hd-notice-list {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  color: #1a1a1a;
+}
+
+/* ---- tabs ---- */
+.hd-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #d9dce1;
+  overflow-x: auto;
+}
+
+.hd-tab {
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #4a4f57;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.hd-tab:hover {
+  color: #111;
+}
+
+.hd-tab-active {
+  color: #111;
+  font-weight: 600;
+  border-bottom-color: #111;
+}
+
+/* ---- request card ---- */
+.hd-card {
+  margin-bottom: 16px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border: 1px solid #d9dce1;
+  border-radius: 8px;
+  color: #1a1a1a;
+}
+
+.hd-card:last-child {
+  margin-bottom: 0;
+}
+
+.hd-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hd-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111;
+  overflow-wrap: anywhere;
+}
+
+.hd-dataset {
+  margin: 6px 0 18px;
+  color: #1a1a1a;
+  overflow-wrap: anywhere;
+}
+
+.hd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px 24px;
+  margin: 0;
+}
+
+.hd-field {
+  min-width: 0; /* lets long values wrap instead of stretching the grid */
+}
+
+.hd-field dt {
+  margin: 0 0 2px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #4a4f57;
+}
+
+.hd-field dd {
+  margin: 0;
+  color: #1a1a1a;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.hd-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e6e8ec;
+}
+
+/* ---- status badge (dark text on pale fill, never white text) ---- */
+.hd-status {
+  padding: 2px 10px;
+  border: 1px solid #9aa0a8;
+  border-radius: 999px;
+  background: #eceef1;
+  color: #2b2f36;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hd-status-pending  { background: #fff3d6; border-color: #c99a2e; color: #5c3f00; }
+.hd-status-approved { background: #e3f1e6; border-color: #3f8a52; color: #174a28; }
+.hd-status-rejected { background: #fbe9e9; border-color: #b04a4a; color: #6b1717; }
+.hd-status-blocked  { background: #ece9f5; border-color: #7d6bb0; color: #3a2a6b; }
+
+/* ---- buttons: pale fills + dark text, differentiated by border/tint ---- */
+.hd-btn {
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid #5d636c;
+  border-radius: 6px;
+  color: #1a1a1a;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.hd-btn:hover {
+  background: #eceef1;
+}
+
+.hd-btn-approve {
+  background: #e3f1e6;
+  border-color: #3f8a52;
+}
+
+.hd-btn-approve:hover {
+  background: #d3e8d8;
+}
+
+.hd-btn-danger {
+  background: #fbe9e9;
+  border-color: #b04a4a;
+}
+
+.hd-btn-danger:hover {
+  background: #f5d9d9;
+}
+
+/* ---- inline messages ---- */
+.hd-message {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border: 1px solid;
+  border-radius: 6px;
+  color: #1a1a1a;
+}
+
+.hd-error   { background: #fbe9e9; border-color: #b04a4a; }
+.hd-success { background: #e3f1e6; border-color: #3f8a52; }
+
+@media (max-width: 600px) {
+  .hospital-page { padding: 12px; }
+  .hd-panel, .hd-card { padding: 16px; }
+  .hd-grid { grid-template-columns: 1fr; }
+  .hd-actions { justify-content: stretch; }
+  .hd-actions .hd-btn { flex: 1 1 100%; }
+}

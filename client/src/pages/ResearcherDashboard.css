@@ -1,0 +1,350 @@
+.researcher-page {
+  min-height: 100vh;
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(255, 255, 255, 0.25), transparent),
+    linear-gradient(135deg, #f2d8d9, #e8c2c7, #e0b4bb);
+  padding: 2rem;
+  color: #372725;
+  position: relative;
+}
+
+.glimmer-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(255,255,255,0.35), transparent),
+    radial-gradient(1.8px 1.8px at 40% 80%, rgba(255,255,255,0.5), transparent);
+  pointer-events: none;
+  animation: twinkle 4s linear infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.35; }
+  100% { opacity: 0.8; }
+}
+
+.researcher-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title-wrap h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.link-btn {
+  background: transparent;
+  border: 2px solid rgba(55, 39, 37, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.researcher-main {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  max-width: 900px;
+}
+
+.search-card, .progress-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(55, 39, 37, 0.15);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(55, 39, 37, 0.15);
+}
+
+.search-label {
+  font-weight: 600;
+}
+
+.search-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.search-input {
+  flex: 1;
+  border: 2px solid #e3c6c9;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 1rem;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #dca7ad, #c98f96);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.suggestions {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: #f6e4e6;
+  border: 1px solid #e3c6c9;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.progress-card h3 {
+  margin: 0 0 0.75rem 0;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.step-item {
+  padding: 10px 12px;
+  border-left: 4px solid #c98f96;
+  background: #fff;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.success-box {
+  margin-top: 1rem;
+  background: #e9f8ef;
+  color: #1d5e36;
+  border: 1px solid #bfe7cd;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-weight: 600;
+}
+
+.error-box {
+  margin-top: 1rem;
+  background: #fdecec;
+  color: #8b1e1e;
+  border: 1px solid #f5bcbc;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-weight: 600;
+}
+
+.info-box {
+  margin-top: 1rem;
+  background: #eef4ff;
+  color: #1e3a6e;
+  border: 1px solid #c5d8f5;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.muted {
+  color: rgba(55, 39, 37, 0.65);
+}
+
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+
+.requests-table th,
+.requests-table td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(55, 39, 37, 0.12);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-pending {
+  background: #fff4db;
+  color: #8a5a00;
+}
+
+.status-approved {
+  background: #e9f8ef;
+  color: #1d5e36;
+}
+
+.status-rejected {
+  background: #fdecec;
+  color: #8b1e1e;
+}
+
+.status-active, .status-running {
+  background: #e0edff;
+  color: #1e3a8a;
+}
+
+.status-cancelled {
+  background: #ececec;
+  color: #4b4b4b;
+}
+
+.status-blocked {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.status-draft, .status-completed {
+  background: #ececec;
+  color: #4b4b4b;
+}
+
+@media (min-width: 900px) {
+  .researcher-main {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+.fl-config-toggle {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.fl-config-panel {
+  margin-top: 10px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fl-config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.fl-config-grid.indented {
+  margin-left: 24px;
+  margin-top: 8px;
+}
+
+.fl-config-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+}
+
+.fl-config-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.fl-config-panel input[type="number"],
+.fl-config-panel select {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+.fl-config-panel .hint {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+}
+
+.checkbox-row {
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 8px !important;
+  font-size: 0.85rem !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.checkbox-row input[type="checkbox"] {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.protocol-cell {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+
+.hospital-scope-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.radio-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.hospital-checklist {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.active-project-card {
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.project-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.link-btn.danger {
+  color: #f87171;
+}
+
+.project-history-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}

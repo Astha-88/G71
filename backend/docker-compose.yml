@@ -1,0 +1,163 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vienko
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlruns
+    ports:
+      # Host port 5000 is commonly occupied; expose MLflow on 5001 by default
+      - "5001:5000"
+    volumes:
+      - mlflow_data:/mlruns
+
+  # --- Federated learning collaborators -----------------------------------
+  # Each hospital is its own container, built from an image that only ever
+  # had that ONE hospital's CSV copied into it (see fl/Dockerfile's
+  # HOSPITAL_NAME build arg) -- so the data isolation is enforceable by
+  # inspecting the image, not just a promise the aggregator code keeps.
+  # They only `expose` their port on the internal fl-net network, never
+  # `ports:` to the host, so nothing outside this docker-compose stack can
+  # reach a hospital's collaborator directly.
+  #
+  # IMPORTANT ORDERING: these images COPY their hospital's CSV at BUILD
+  # time, so backend/data/hospitalN/*.csv must already exist on the HOST
+  # before `docker-compose build` runs. Generate it first:
+  #   python3 backend/scripts/generate_synthetic_data.py
+  # mTLS certs must also exist on the host first (never baked into an
+  # image or committed to git -- see fl/tls.py's module docstring):
+  #   python3 backend/scripts/generate_certs.py
+  # (see DOCKER_DEMO.md step 0).
+  fl-hospital1:
+    build:
+      context: .
+      dockerfile: fl/Dockerfile
+      args:
+        HOSPITAL_NAME: hospital1
+    environment:
+      FL_TLS_ENABLED: "1"
+      FL_TLS_CERT: /app/certs/hospital1.crt
+      FL_TLS_KEY: /app/certs/hospital1.key
+      FL_TLS_CA: /app/certs/ca.crt
+    volumes:
+      # Only THIS hospital's own cert/key, plus the (public) CA cert to
+      # verify callers against -- never another service's private key.
+      - ./certs/hospital1.crt:/app/certs/hospital1.crt:ro
+      - ./certs/hospital1.key:/app/certs/hospital1.key:ro
+      - ./certs/ca.crt:/app/certs/ca.crt:ro
+    networks:
+      - fl-net
+    expose:
+      - "9101"
+
+  fl-hospital2:
+    build:
+      context: .
+      dockerfile: fl/Dockerfile
+      args:
+        HOSPITAL_NAME: hospital2
+    environment:
+      FL_TLS_ENABLED: "1"
+      FL_TLS_CERT: /app/certs/hospital2.crt
+      FL_TLS_KEY: /app/certs/hospital2.key
+      FL_TLS_CA: /app/certs/ca.crt
+    volumes:
+      - ./certs/hospital2.crt:/app/certs/hospital2.crt:ro
+      - ./certs/hospital2.key:/app/certs/hospital2.key:ro
+      - ./certs/ca.crt:/app/certs/ca.crt:ro
+    networks:
+      - fl-net
+    expose:
+      - "9101"
+
+  fl-hospital3:
+    build:
+      context: .
+      dockerfile: fl/Dockerfile
+      args:
+        HOSPITAL_NAME: hospital3
+    environment:
+      FL_TLS_ENABLED: "1"
+      FL_TLS_CERT: /app/certs/hospital3.crt
+      FL_TLS_KEY: /app/certs/hospital3.key
+      FL_TLS_CA: /app/certs/ca.crt
+    volumes:
+      - ./certs/hospital3.crt:/app/certs/hospital3.crt:ro
+      - ./certs/hospital3.key:/app/certs/hospital3.key:ro
+      - ./certs/ca.crt:/app/certs/ca.crt:ro
+    networks:
+      - fl-net
+    expose:
+      - "9101"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - minio
+      - fl-hospital1
+      - fl-hospital2
+      - fl-hospital3
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/vienko
+      IN_DOCKER: "1"
+      # Talk to the fl-hospital* containers over the network instead of
+      # spawning local subprocesses -- see services/openfl_service.py.
+      FL_DEPLOYMENT_MODE: network
+      # mTLS: the aggregator presents this client cert to every
+      # collaborator, and only trusts collaborator certs signed by the
+      # same CA. See fl/tls.py and scripts/generate_certs.py.
+      FL_TLS_ENABLED: "1"
+      FL_TLS_CERT: /app/certs/aggregator.crt
+      FL_TLS_KEY: /app/certs/aggregator.key
+      FL_TLS_CA: /app/certs/ca.crt
+      # No volume mount to backend/data anymore -- this container has no
+      # filesystem access to any hospital's raw data at all now. Dataset
+      # registration happens via fl/register_dataset_client.py running
+      # INSIDE each fl-hospitalN container instead (see DOCKER_DEMO.md);
+      # this service only ever receives dataset bytes over HTTP, same as
+      # it would from a genuinely external hospital's system.
+    volumes:
+      - ./certs/aggregator.crt:/app/certs/aggregator.crt:ro
+      - ./certs/aggregator.key:/app/certs/aggregator.key:ro
+      - ./certs/ca.crt:/app/certs/ca.crt:ro
+    ports:
+      - "8000:8000"
+    networks:
+      - default
+      - fl-net
+
+networks:
+  fl-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  minio_data:
+  mlflow_data:
+
+

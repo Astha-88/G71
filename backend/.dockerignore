@@ -1,0 +1,17 @@
+# NOTE: this context directory (backend/) is shared by BOTH backend/Dockerfile
+# and fl/Dockerfile (docker-compose.yml builds fl-hospitalN with the same
+# `context: ./backend`). A .dockerignore applies to the whole context
+# regardless of which Dockerfile consumes it, so it can't exclude data/
+# here without also breaking fl/Dockerfile's `COPY data/${HOSPITAL_NAME}/`.
+# Instead, backend/Dockerfile itself uses explicit COPY instructions for
+# only the source directories it needs (no `COPY . .`, and no `data/` in
+# that list) -- see backend/Dockerfile. That's what actually keeps hospital
+# data out of the backend image; this file just trims build-context noise.
+
+.venv/
+venv/
+__pycache__/
+*.pyc
+.git/
+.pytest_cache/
+*.egg-info/

@@ -1,0 +1,17 @@
+fastapi==0.135.1
+uvicorn[standard]==0.41.0
+sqlalchemy==2.0.48
+psycopg2-binary==2.9.11
+minio==7.2.20
+pydantic[email]==2.12.5
+numpy==2.4.2
+pandas==3.0.1
+# Required by FastAPI's Form()/UploadFile() (api/datasets.py's multipart
+# dataset upload endpoint) -- FastAPI doesn't bundle this itself and raises
+# a runtime error on first request to that endpoint if it's missing.
+python-multipart==0.0.20
+requests==2.32.3
+# For scripts/generate_certs.py (mTLS between aggregator and collaborators).
+# Not needed at runtime by the aggregator or collaborators themselves --
+# they only use the stdlib `ssl` module to USE certs, not generate them.
+cryptography==43.0.3
